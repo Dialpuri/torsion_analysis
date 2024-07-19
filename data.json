@@ -1,6 +1,21 @@
 {
   "residues": [
     {
+      "name":  "FUC",
+      "snfgShape": "circle",
+      "snfgColour": "green",
+      "preferredDepths": [2],
+      "donorSets": [],
+      "acceptorSets": [
+        {
+          "atom1": "C1",
+          "atom2": "O5",
+          "atom3": "C5",
+          "identifier": 1
+        }
+      ]
+    },
+    {
       "name":  "MAN",
       "snfgShape": "circle",
       "snfgColour": "green",
