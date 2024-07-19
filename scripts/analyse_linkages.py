@@ -1,3 +1,4 @@
+import csv
 import dataclasses
 import math
 from collections import defaultdict
@@ -11,6 +12,7 @@ from pprint import pprint
 
 import matplotlib.pyplot as plt
 
+
 def get_structure(pdb: str):
     url = f'https://files.rcsb.org/view/{pdb.upper()}.cif'
     req = requests.get(url)
@@ -19,6 +21,17 @@ def get_structure(pdb: str):
         f.write(req.text.encode('utf-8'))
         s = gemmi.read_structure(f.name)
     return s
+
+
+def get_privateer_report(pdb: str):
+    middlefix = pdb[1:3]
+    url = f"https://raw.githubusercontent.com/Dialpuri/PrivateerDatabase/master/pdb/{middlefix}/{pdb.lower()}.json"
+    req = requests.get(url)
+    if req.status_code == 200:
+        json = req.json()
+        glycans = json["glycans"]
+        return glycans["n-glycan"]
+
 
 def load_data_file(filename):
     with open(filename) as f:
@@ -35,15 +48,16 @@ def load_data_file(filename):
 def extract_angles(positions):
     torsions = []
     angles = []
+    rounding = 3
     for i in range(len(positions) - 3):
         angle = gemmi.calculate_angle(positions[i + 1], positions[i + 2], positions[i + 3])
         angles.append(
-            angle * (180 / math.pi)
+            round(angle * (180 / math.pi), rounding)
         )
         torsion = gemmi.calculate_dihedral(positions[i], positions[i + 1], positions[i + 2],
-                                           positions[i + 3])
+                                                 positions[i + 3])
         torsions.append(
-            torsion * (180 / math.pi)
+            round(torsion * (180 / math.pi), rounding)
         )
     return angles, torsions
 
@@ -77,6 +91,8 @@ class Linkage:
     acceptor_name: str
     donor_atom: str
     acceptor_atom: str
+    donor_seqid: str
+    acceptor_seqid: str
     phi: float
     psi: float
     omega: float
@@ -85,12 +101,35 @@ class Linkage:
     gamma: float
     donor_site: tuple[int, int, int]
     acceptor_site: tuple[int, int, int]
+    residue_1_diagnostic: str
+    residue_2_diagnostic: str
+
+
+def get_trailing_number(string):
+    number_str = ''
+    for char in reversed(string):
+        if char.isdigit():
+            number_str = char + number_str
+        else:
+            break
+    if number_str == '':
+        return 0
+    number = int(number_str)
+    return number
+
 
 def get_linkage_id(linkage: Linkage):
-    return f"{linkage.donor_name}-{linkage.donor_atom[-1]},{linkage.acceptor_atom[-1]}-{linkage.acceptor_name}"
+    return f"{linkage.acceptor_name}-{get_trailing_number(linkage.acceptor_atom)},{get_trailing_number(linkage.donor_atom)}-{linkage.donor_name}"
+
+
+def get_sugar_id(chain: gemmi.Chain, residue: gemmi.Residue):
+    return f"{residue.name}-{chain.name}-{residue.seqid}"
+
 
 def get_angles_from_linkage(linkage: Linkage):
-    return {'alpha': linkage.alpha, 'beta': linkage.beta, 'gamma': linkage.gamma, 'psi': linkage.psi, 'phi': linkage.phi, 'omega': linkage.omega}
+    return {'alpha': linkage.alpha, 'beta': linkage.beta, 'gamma': linkage.gamma, 'psi': linkage.psi,
+            'phi': linkage.phi, 'omega': linkage.omega}
+
 
 def extract_linkages(glycosite_data):
     linkage_data = defaultdict(list)
@@ -139,8 +178,20 @@ def calculate_linkage_statistics(data):
 
     pprint(stats)
 
+
+def write_to_csv(file_path, data_instances):
+    with open(file_path, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(data_instances[0].__annotations__.keys())
+        for instance in data_instances:
+            writer.writerow(instance.__dict__.values())
+
+
 def main():
-    s = get_structure('5fji')
+    pdb = '5fji'
+    s = get_structure(pdb)
+    d = get_privateer_report(pdb)
+
     residue_data, linkage_data = load_data_file("../sails/package/data/data.json")
 
     sites, to_remove = extract_sites(s)
@@ -151,12 +202,27 @@ def main():
             del s[0][chain_idx][res_idx]
 
     ns = gemmi.NeighborSearch(s, max_radius=2.5).populate()
-    glycosite_data = defaultdict(list)
+    glycosite_data = {}
+    glycosite_list = []
 
     for site in sites:
         adjacency_list = []
+        base_chain = s[site[0]][site[1]]
+        base_residue = s[site[0]][site[1]][site[2]]
+
+        db_entry = None
+        for entry in d:
+            if (entry['proteinChainId'] == base_chain.name and
+                    entry['proteinResidueId'] == str(base_residue.seqid) and
+                    entry['proteinResidueType'] == base_residue.name):
+                db_entry = entry
+                break
+
+        if not db_entry:
+            continue
 
         def recursive_search(site):
+            chain = s[site[0]][site[1]]
             residue = s[site[0]][site[1]][site[2]]
 
             if residue.name not in residue_data: raise RuntimeError(f"Unknown residue - {residue.name}")
@@ -172,10 +238,10 @@ def main():
                 if not atoms: continue
                 atoms = sorted(atoms, key=lambda a: (a.pos - donor_pos).length())
                 closest_mark = atoms[0]
+                closest_chain = s[0][closest_mark.chain_idx]
                 closest_residue = s[0][closest_mark.chain_idx][closest_mark.residue_idx]
                 closest_atom = closest_residue[closest_mark.atom_idx]
                 closest_site = (0, closest_mark.chain_idx, closest_mark.residue_idx)
-
 
                 # calculate torsions
                 acceptor_data = residue_data[closest_residue.name]['acceptorSets'][0]
@@ -186,19 +252,35 @@ def main():
                              *[closest_residue.find_atom(a, '*').pos for a in atoms[3:]]]
                 angles, torsions = extract_angles(positions)
 
+                donor_sugar_id = get_sugar_id(chain, residue)
+                acceptor_sugar_id = get_sugar_id(closest_chain, closest_residue)
+
+                donor_sugar_entry = next((x for x in db_entry['sugars'] if x['sugarId'] == donor_sugar_id), None)
+                acceptor_sugar_entry = next((x for x in db_entry['sugars'] if x['sugarId'] == acceptor_sugar_id), None)
+
+                residue_2_diagnostic = acceptor_sugar_entry['diagnostic'] if acceptor_sugar_entry else 'unk'
+                if residue.name == 'ASN':
+                    residue_1_diagnostic = 'yes'
+                else:
+                    residue_1_diagnostic = donor_sugar_entry['diagnostic'] if donor_sugar_entry else 'unk'
+
                 linkage = Linkage(donor_name=residue.name, acceptor_name=closest_residue.name,
                                   donor_atom=donor_atom, acceptor_atom=closest_atom.name,
+                                  donor_seqid=str(residue.seqid), acceptor_seqid=str(closest_residue.seqid),
                                   phi=torsions[0], psi=torsions[1], omega=torsions[2],
                                   alpha=angles[0], beta=angles[1], gamma=angles[2],
-                                  donor_site=site, acceptor_site=closest_site)
+                                  donor_site=site, acceptor_site=closest_site,
+                                  residue_1_diagnostic=residue_1_diagnostic, residue_2_diagnostic=residue_2_diagnostic)
 
                 adjacency_list.append(linkage)
                 recursive_search(closest_site)
 
         recursive_search(site)
         glycosite_data[site] = adjacency_list
+        glycosite_list.extend(adjacency_list)
 
-    calculate_linkage_statistics(glycosite_data)
+    write_to_csv('glycosite_data.csv', glycosite_list)
+    # calculate_linkage_statistics(glycosite_data)
 
 
 if __name__ == '__main__':
