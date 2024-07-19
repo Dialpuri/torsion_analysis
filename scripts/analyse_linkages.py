@@ -11,10 +11,17 @@ import json
 from pprint import pprint
 
 import matplotlib.pyplot as plt
+from pathlib import Path
+import multiprocessing
+from tqdm import tqdm 
 
+mmCIF_path = Path(f"/vault/pdb_mirror/data/structures/all/mmCIF/")
+privateer_database_path = Path(f"/vault/privateer_database/pdb/")
+mmCIF_url = "https://files.rcsb.org/view"
+privateer_database_url = "https://raw.githubusercontent.com/Dialpuri/PrivateerDatabase/master/pdb"
 
-def get_structure(pdb: str):
-    url = f'https://files.rcsb.org/view/{pdb.upper()}.cif'
+def get_structure_from_remote(pdb: str):
+    url = f'{mmCIF_url}/{pdb.upper()}.cif'
     req = requests.get(url)
     s = None
     with tempfile.NamedTemporaryFile(suffix='.cif') as f:
@@ -22,15 +29,32 @@ def get_structure(pdb: str):
         s = gemmi.read_structure(f.name)
     return s
 
+def get_structure(pdb: str):
+    filepath = mmCIF_path / f"{pdb.lower()}.cif.gz"
+    if filepath.exists():
+        s = gemmi.read_structure(str(filepath))
+        return s
+
+
+
+def get_privateer_report_from_remote(pdb: str):
+    middlefix = pdb[1:3]
+    url = f"{privateer_database_url}/{middlefix}/{pdb.lower()}.json"
+    req = requests.get(url)
+    if req.status_code == 200:
+        json_data = req.json()
+        glycans = json_data["glycans"]
+        return glycans["n-glycan"]
 
 def get_privateer_report(pdb: str):
     middlefix = pdb[1:3]
-    url = f"https://raw.githubusercontent.com/Dialpuri/PrivateerDatabase/master/pdb/{middlefix}/{pdb.lower()}.json"
-    req = requests.get(url)
-    if req.status_code == 200:
-        json = req.json()
-        glycans = json["glycans"]
-        return glycans["n-glycan"]
+    filepath = privateer_database_path / f"{middlefix}/{pdb.lower()}.json"
+
+    if filepath.exists(): 
+        with open(str(filepath), "r") as f: 
+            data = json.load(f)
+            glycans = data["glycans"]
+            return glycans["n-glycan"]
 
 
 def load_data_file(filename):
@@ -99,8 +123,8 @@ class Linkage:
     alpha: float
     beta: float
     gamma: float
-    donor_site: tuple[int, int, int]
-    acceptor_site: tuple[int, int, int]
+    donor_site: tuple
+    acceptor_site: tuple
     residue_1_diagnostic: str
     residue_2_diagnostic: str
 
@@ -180,6 +204,7 @@ def calculate_linkage_statistics(data):
 
 
 def write_to_csv(file_path, data_instances):
+
     with open(file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(data_instances[0].__annotations__.keys())
@@ -187,12 +212,14 @@ def write_to_csv(file_path, data_instances):
             writer.writerow(instance.__dict__.values())
 
 
-def main():
-    pdb = '5fji'
+def worker(data):
+    pdb, output = data
+    if Path(output).exists(): return
+
     s = get_structure(pdb)
     d = get_privateer_report(pdb)
 
-    residue_data, linkage_data = load_data_file("../sails/package/data/data.json")
+    residue_data, _ = load_data_file("data.json")
 
     sites, to_remove = extract_sites(s)
 
@@ -231,7 +258,9 @@ def main():
             donors = data['donorSets']
             for donor in donors:
                 donor_atom = donor['atom3']
-                donor_pos = residue.find_atom(donor_atom, '*').pos
+                donor_gemmi_atom = residue.find_atom(donor_atom, '*')
+                if not donor_gemmi_atom: continue
+                donor_pos = donor_gemmi_atom.pos
 
                 atoms = ns.find_atoms(donor_pos)
                 atoms = [a for a in atoms if (0, a.chain_idx, a.residue_idx) != site]
@@ -244,12 +273,25 @@ def main():
                 closest_site = (0, closest_mark.chain_idx, closest_mark.residue_idx)
 
                 # calculate torsions
-                acceptor_data = residue_data[closest_residue.name]['acceptorSets'][0]
+                if closest_residue.name not in residue_data:
+                    continue
+                
+                acceptor_sets = residue_data[closest_residue.name]['acceptorSets']
+                if not acceptor_sets:
+                    continue
+                    
+                acceptor_data = acceptor_sets[0]
                 if acceptor_data['atom1'] != closest_atom.name: continue
                 atoms = [donor['atom1'], donor['atom2'], donor['atom3'], acceptor_data['atom1'], acceptor_data['atom2'],
                          acceptor_data['atom3']]
-                positions = [*[residue.find_atom(a, '*').pos for a in atoms[:3]],
-                             *[closest_residue.find_atom(a, '*').pos for a in atoms[3:]]]
+                gemmi_atoms = [*[residue.find_atom(a, '*') for a in atoms[:3]],
+                             *[closest_residue.find_atom(a, '*') for a in atoms[3:]]]
+                
+                if any(a is None for a in gemmi_atoms):
+                    continue
+                
+                positions = [a.pos for a in gemmi_atoms]
+                
                 angles, torsions = extract_angles(positions)
 
                 donor_sugar_id = get_sugar_id(chain, residue)
@@ -279,9 +321,17 @@ def main():
         glycosite_data[site] = adjacency_list
         glycosite_list.extend(adjacency_list)
 
-    write_to_csv('glycosite_data.csv', glycosite_list)
+    if glycosite_list:
+        write_to_csv(output, glycosite_list)
     # calculate_linkage_statistics(glycosite_data)
 
+def main(): 
+    output_path = Path("output")
+    data = [(x.stem, f"{output_path / x.stem}.csv") for x in privateer_database_path.rglob("*") if not x.is_dir()]
+    
+    with multiprocessing.Pool() as p: 
+        x = list(tqdm(p.imap_unordered(worker, data), total=len(data)))
+    
 
 if __name__ == '__main__':
     main()
