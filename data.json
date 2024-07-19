@@ -1,10 +1,12 @@
 {
   "residues": [
     {
-      "name":  "FUC",
+      "name": "FUC",
       "snfgShape": "circle",
       "snfgColour": "green",
-      "preferredDepths": [2],
+      "preferredDepths": [
+        2
+      ],
       "donorSets": [],
       "acceptorSets": [
         {
@@ -16,10 +18,15 @@
       ]
     },
     {
-      "name":  "MAN",
+      "name": "MAN",
       "snfgShape": "circle",
       "snfgColour": "green",
-      "preferredDepths": [4, 5, 6, 7],
+      "preferredDepths": [
+        4,
+        5,
+        6,
+        7
+      ],
       "donorSets": [
         {
           "atom3": "O2",
@@ -50,10 +57,12 @@
       ]
     },
     {
-      "name":  "BMA",
+      "name": "BMA",
       "snfgShape": "circle",
       "snfgColour": "green",
-      "preferredDepths": [3],
+      "preferredDepths": [
+        3
+      ],
       "donorSets": [
         {
           "atom3": "O6",
@@ -78,10 +87,13 @@
       ]
     },
     {
-      "name":  "NAG",
+      "name": "NAG",
       "snfgShape": "square",
       "snfgColour": "blue",
-      "preferredDepths": [1,2],
+      "preferredDepths": [
+        1,
+        2
+      ],
       "donorSets": [
         {
           "atom1": "C5",
@@ -100,10 +112,12 @@
       ]
     },
     {
-      "name":  "ASN",
+      "name": "ASN",
       "snfgShape": "square",
       "snfgColour": "white",
-      "preferredDepths": [0],
+      "preferredDepths": [
+        0
+      ],
       "donorSets": [
         {
           "atom1": "CB",
