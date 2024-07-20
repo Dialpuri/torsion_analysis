@@ -309,7 +309,7 @@ def worker(data):
                 linkage = Linkage(donor_name=residue.name, acceptor_name=closest_residue.name,
                                   donor_atom=donor_atom, acceptor_atom=closest_atom.name,
                                   donor_seqid=str(residue.seqid), acceptor_seqid=str(closest_residue.seqid),
-                                  phi=torsions[0], psi=torsions[1], omega=torsions[2],
+                                  psi=torsions[0], phi=torsions[1], omega=torsions[2],
                                   alpha=angles[0], beta=angles[1], gamma=angles[2],
                                   donor_site=site, acceptor_site=closest_site,
                                   residue_1_diagnostic=residue_1_diagnostic, residue_2_diagnostic=residue_2_diagnostic)

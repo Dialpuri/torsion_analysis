@@ -1,8 +1,12 @@
 import polars as pl
 from pathlib import Path
 from tqdm import tqdm
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 import pandas as pd
+import scipy
+import math
+
 
 schema = {
     "donor_name": pl.Utf8,
@@ -62,33 +66,86 @@ def main():
             separator=",",
         ).alias("linkage_id")
     ).filter(
-        pl.col('residue_1_diagnostic')=='yes', 
-        pl.col('residue_2_diagnostic')=='yes'
+        pl.col("residue_1_diagnostic") == "yes", pl.col("residue_2_diagnostic") == "yes"
     )
-    
+
     rounding = 3
     frequency_cutoff = 100
-    
-    df2 = df.group_by('linkage_id').agg(
-        pl.col('phi').mean().round(rounding).alias('phiMean'),
-        pl.col('phi').std().round(rounding).alias('phiStdDev'),
-        pl.col('psi').mean().round(rounding).alias('psiMean'),
-        pl.col('psi').std().round(rounding).alias('psiStdDev'),
-        pl.col('omega').mean().round(rounding).alias('omegaMean'),
-        pl.col('omega').std().round(rounding).alias('omegaStdDev'),
-        pl.col('alpha').mean().round(rounding).alias('alphaMean'),
-        pl.col('alpha').std().round(rounding).alias('alphaStdDev'),
-        pl.col('beta').mean().round(rounding).alias('betaMean'),
-        pl.col('beta').std().round(rounding).alias('betaStdDev'),
-        pl.col('gamma').mean().round(rounding).alias('gammaMean'),
-        pl.col('gamma').std().round(rounding).alias('gammaStdDev'),
-        pl.len().alias('frequency')
-    ).filter(
-        pl.col('frequency')>frequency_cutoff
-    ).sort(
-        'frequency', descending=True
+
+    def deg_to_rad(value):
+        return value * (math.pi / 180)
+
+    def rad_to_deg(value):
+        return value * (180 / math.pi)
+
+    def mean(value):
+        r = deg_to_rad(value)
+        m = scipy.stats.circmean(r, low=-math.pi, high=math.pi)
+        d = rad_to_deg(m)
+        return d
+
+    def std(value):
+        r = deg_to_rad(value)
+        m = scipy.stats.circstd(r, low=-math.pi, high=math.pi)
+        d = rad_to_deg(m)
+        return d
+
+    df2 = (
+        df.group_by("linkage_id")
+        .agg(
+            pl.col("phi")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("phiMean"),
+            pl.col("phi")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("phiStdDev"),
+            pl.col("psi")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("psiMean"),
+            pl.col("psi")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("psiStdDev"),
+            pl.col("omega")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("omegaMean"),
+            pl.col("omega")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("omegaStdDev"),
+            pl.col("alpha")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("alphaMean"),
+            pl.col("alpha")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("alphaStdDev"),
+            pl.col("beta")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("betaMean"),
+            pl.col("beta")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("betaStdDev"),
+            pl.col("gamma")
+            .map_elements(mean, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("gammaMean"),
+            pl.col("gamma")
+            .map_elements(std, return_dtype=pl.Float64)
+            .round(rounding)
+            .alias("gammaStdDev"),
+            pl.len().alias("frequency"),
+        )
+        .filter(pl.col("frequency") > frequency_cutoff)
+        .sort("frequency", descending=True)
     )
-    
 
     df2.write_csv("averages.csv")
 
@@ -97,13 +154,13 @@ def main():
     #     i, d = p
     #     phi = d['phi'].to_pandas().to_numpy()
     #     psi = d['psi'].to_pandas().to_numpy()
-        
+
     #     plt.hist2d(psi, phi, bins=(90,90), cmap='gist_heat_r')
     #     plt.xlim((-180,180))
     #     plt.ylim((-180,180))
     #     plt.savefig(f"plots/{i[0]}.png")
-        
-        
+
+
 if __name__ == "__main__":
     # collate_linkages()
     main()
