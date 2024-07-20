@@ -61,6 +61,9 @@ def main():
             ],
             separator=",",
         ).alias("linkage_id")
+    ).filter(
+        pl.col('residue_1_diagnostic')=='yes', 
+        pl.col('residue_2_diagnostic')=='yes'
     )
     
     rounding = 3

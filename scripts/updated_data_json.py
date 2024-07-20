@@ -30,7 +30,7 @@ def main():
     new_data['linkages'] = linkages
     
     with open(new_path, "w") as output_file:
-        json.dump(new_data, output_file)
+        json.dump(new_data, output_file, indent=4)
    
 
     
