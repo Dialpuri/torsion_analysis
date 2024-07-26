@@ -162,5 +162,5 @@ def main():
 
 
 if __name__ == "__main__":
-    # collate_linkages()
+    collate_linkages()
     main()
