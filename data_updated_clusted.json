@@ -99,13 +99,13 @@
                     "atom1": "C5",
                     "atom2": "C4",
                     "atom3": "O4",
-                    "identifier": 4
+                    "identifier": 6
                 },
                 {
                     "atom1": "C4",
                     "atom2": "C3",
                     "atom3": "O3",
-                    "identifier": 4
+                    "identifier": 3
                 },
                 {
                     "atom1": "C5",
@@ -588,6 +588,51 @@
                         "psiStdDev": 54.477,
                         "omegaMean": 63.742,
                         "omegaStdDev": 7.224
+                    }
+                }
+            ]
+        },
+        {
+            "donorResidue": "MAN",
+            "acceptorResidue": "NAG",
+            "donorNumber": "2",
+            "acceptorNumber": "1",
+            "length": 1.4,
+            "clusters": [
+                {
+                    "angles": {
+                        "alphaMean": 112.999,
+                        "alphaStdDev": 4.643,
+                        "betaMean": 110.775,
+                        "betaStdDev": 4.643,
+                        "gammaMean": 114.244,
+                        "gammaStdDev": 2.309
+                    },
+                    "torsions": {
+                        "phiMean": -83.16,
+                        "phiStdDev": 19.077,
+                        "psiMean": 156.76,
+                        "psiStdDev": 44.258,
+                        "omegaMean": 179.206,
+                        "omegaStdDev": 7.931
+                    }
+                },
+                {
+                    "angles": {
+                        "alphaMean": 115.473,
+                        "alphaStdDev": 4.062,
+                        "betaMean": 111.794,
+                        "betaStdDev": 4.062,
+                        "gammaMean": 114.886,
+                        "gammaStdDev": 2.858
+                    },
+                    "torsions": {
+                        "phiMean": 44.462,
+                        "phiStdDev": 33.911,
+                        "psiMean": 137.69,
+                        "psiStdDev": 29.346,
+                        "omegaMean": 179.559,
+                        "omegaStdDev": 6.177
                     }
                 }
             ]
