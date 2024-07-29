@@ -1,0 +1,362 @@
+{
+    "BMA-1,4-NAG": [
+        {
+            "phiMean": -83.669,
+            "psiMean": -131.478,
+            "omegaMean": 178.472,
+            "alphaMean": 112.963,
+            "betaMean": 111.259,
+            "gammaMean": 113.771,
+            "phiStd": 38.257,
+            "psiStd": 14.602,
+            "omegaStd": 6.132,
+            "alphaStd": 4.496,
+            "betaStd": 3.092,
+            "gammaStd": 1.62
+        },
+        {
+            "phiMean": -110.737,
+            "psiMean": 78.36,
+            "omegaMean": 179.908,
+            "alphaMean": 118.402,
+            "betaMean": 111.058,
+            "gammaMean": 114.405,
+            "phiStd": 41.555,
+            "psiStd": 25.132,
+            "omegaStd": 8.293,
+            "alphaStd": 5.23,
+            "betaStd": 2.819,
+            "gammaStd": 1.96
+        }
+    ],
+    "FUC-1,3-NAG": [
+        {
+            "phiMean": -67.902,
+            "psiMean": 139.754,
+            "omegaMean": -65.706,
+            "alphaMean": 114.468,
+            "betaMean": 113.049,
+            "gammaMean": 115.227,
+            "phiStd": 13.039,
+            "psiStd": 8.787,
+            "omegaStd": 7.385,
+            "alphaStd": 3.421,
+            "betaStd": 2.927,
+            "gammaStd": 2.164
+        },
+        {
+            "phiMean": -108.059,
+            "psiMean": 10.613,
+            "omegaMean": -75.286,
+            "alphaMean": 120.567,
+            "betaMean": 110.511,
+            "gammaMean": 115.25,
+            "phiStd": 44.452,
+            "psiStd": 44.212,
+            "omegaStd": 13.871,
+            "alphaStd": 5.481,
+            "betaStd": 6.28,
+            "gammaStd": 2.348
+        }
+    ],
+    "FUC-1,6-NAG": [
+        {
+            "phiMean": -83.971,
+            "psiMean": -159.668,
+            "omegaMean": -63.8,
+            "alphaMean": 112.045,
+            "betaMean": 111.561,
+            "gammaMean": 114.921,
+            "phiStd": 30.056,
+            "psiStd": 27.959,
+            "omegaStd": 8.514,
+            "alphaStd": 5.979,
+            "betaStd": 3.616,
+            "gammaStd": 1.979
+        },
+        {
+            "phiMean": -81.232,
+            "psiMean": 125.964,
+            "omegaMean": -65.062,
+            "alphaMean": 111.376,
+            "betaMean": 112.227,
+            "gammaMean": 115.159,
+            "phiStd": 30.292,
+            "psiStd": 23.346,
+            "omegaStd": 8.861,
+            "alphaStd": 3.955,
+            "betaStd": 3.276,
+            "gammaStd": 2.054
+        }
+    ],
+    "MAN-1,2-MAN": [
+        {
+            "phiMean": 149.427,
+            "psiMean": 166.702,
+            "omegaMean": 62.546,
+            "alphaMean": 113.427,
+            "betaMean": 110.13,
+            "gammaMean": 114.421,
+            "phiStd": 29.129,
+            "psiStd": 28.999,
+            "omegaStd": 7.578,
+            "alphaStd": 3.654,
+            "betaStd": 1.88,
+            "gammaStd": 1.585
+        },
+        {
+            "phiMean": 81.341,
+            "psiMean": 127.531,
+            "omegaMean": 62.113,
+            "alphaMean": 111.736,
+            "betaMean": 111.726,
+            "gammaMean": 114.934,
+            "phiStd": 15.082,
+            "psiStd": 21.67,
+            "omegaStd": 5.308,
+            "alphaStd": 3.807,
+            "betaStd": 2.941,
+            "gammaStd": 1.849
+        }
+    ],
+    "MAN-1,3-BMA": [
+        {
+            "phiMean": 124.141,
+            "psiMean": 167.284,
+            "omegaMean": 62.53,
+            "alphaMean": 112.696,
+            "betaMean": 111.185,
+            "gammaMean": 114.511,
+            "phiStd": 27.455,
+            "psiStd": 52.376,
+            "omegaStd": 6.109,
+            "alphaStd": 4.802,
+            "betaStd": 2.748,
+            "gammaStd": 1.534
+        },
+        {
+            "phiMean": 76.691,
+            "psiMean": 120.879,
+            "omegaMean": 63.32,
+            "alphaMean": 111.777,
+            "betaMean": 112.14,
+            "gammaMean": 114.921,
+            "phiStd": 17.032,
+            "psiStd": 18.587,
+            "omegaStd": 6.55,
+            "alphaStd": 4.176,
+            "betaStd": 3.576,
+            "gammaStd": 1.929
+        }
+    ],
+    "MAN-1,3-MAN": [
+        {
+            "phiMean": 87.585,
+            "psiMean": 127.542,
+            "omegaMean": 63.792,
+            "alphaMean": 111.267,
+            "betaMean": 112.338,
+            "gammaMean": 115.005,
+            "phiStd": 26.284,
+            "psiStd": 21.99,
+            "omegaStd": 6.819,
+            "alphaStd": 4.451,
+            "betaStd": 4.644,
+            "gammaStd": 1.642
+        },
+        {
+            "phiMean": 109.582,
+            "psiMean": -37.08,
+            "omegaMean": 60.351,
+            "alphaMean": 117.959,
+            "betaMean": 110.22,
+            "gammaMean": 114.023,
+            "phiStd": 28.224,
+            "psiStd": 30.971,
+            "omegaStd": 8.854,
+            "alphaStd": 8.512,
+            "betaStd": 4.805,
+            "gammaStd": 1.649
+        }
+    ],
+    "MAN-1,4-NAG": [
+        {
+            "phiMean": 115.165,
+            "psiMean": -128.121,
+            "omegaMean": 65.626,
+            "alphaMean": 114.022,
+            "betaMean": 112.518,
+            "gammaMean": 114.468,
+            "phiStd": 34.979,
+            "psiStd": 22.215,
+            "omegaStd": 12.848,
+            "alphaStd": 9.4,
+            "betaStd": 6.197,
+            "gammaStd": 2.105
+        },
+        {
+            "phiMean": 113.0,
+            "psiMean": 86.755,
+            "omegaMean": 78.714,
+            "alphaMean": 121.369,
+            "betaMean": 111.1,
+            "gammaMean": 113.708,
+            "phiStd": 59.374,
+            "psiStd": 32.129,
+            "omegaStd": 46.997,
+            "alphaStd": 13.264,
+            "betaStd": 7.576,
+            "gammaStd": 1.677
+        }
+    ],
+    "MAN-1,6-BMA": [
+        {
+            "phiMean": 91.041,
+            "psiMean": -165.287,
+            "omegaMean": 62.662,
+            "alphaMean": 111.245,
+            "betaMean": 111.618,
+            "gammaMean": 114.578,
+            "phiStd": 36.251,
+            "psiStd": 29.928,
+            "omegaStd": 6.365,
+            "alphaStd": 5.137,
+            "betaStd": 3.314,
+            "gammaStd": 2.196
+        },
+        {
+            "phiMean": 99.177,
+            "psiMean": 122.388,
+            "omegaMean": 62.79,
+            "alphaMean": 111.215,
+            "betaMean": 111.891,
+            "gammaMean": 114.514,
+            "phiStd": 38.324,
+            "psiStd": 28.196,
+            "omegaStd": 6.586,
+            "alphaStd": 5.15,
+            "betaStd": 2.793,
+            "gammaStd": 1.803
+        }
+    ],
+    "MAN-1,6-MAN": [
+        {
+            "phiMean": 69.439,
+            "psiMean": 178.823,
+            "omegaMean": 63.355,
+            "alphaMean": 112.164,
+            "betaMean": 111.948,
+            "gammaMean": 114.89,
+            "phiStd": 16.826,
+            "psiStd": 36.578,
+            "omegaStd": 7.64,
+            "alphaStd": 5.285,
+            "betaStd": 3.315,
+            "gammaStd": 1.67
+        },
+        {
+            "phiMean": 145.024,
+            "psiMean": -169.354,
+            "omegaMean": 63.742,
+            "alphaMean": 110.925,
+            "betaMean": 110.781,
+            "gammaMean": 114.455,
+            "phiStd": 29.365,
+            "psiStd": 54.477,
+            "omegaStd": 7.224,
+            "alphaStd": 3.37,
+            "betaStd": 2.508,
+            "gammaStd": 1.614
+        }
+    ],
+    "NAG-1,2-ASN": [
+        {
+            "phiMean": 54.086,
+            "psiMean": -179.512,
+            "omegaMean": 167.981,
+            "alphaMean": 127.765,
+            "betaMean": 112.241,
+            "gammaMean": 113.442,
+            "phiStd": 36.298,
+            "psiStd": 53.054,
+            "omegaStd": 11.815,
+            "alphaStd": 8.153,
+            "betaStd": 5.97,
+            "gammaStd": 1.689
+        },
+        {
+            "phiMean": -106.706,
+            "psiMean": 179.446,
+            "omegaMean": 176.266,
+            "alphaMean": 122.28,
+            "betaMean": 109.788,
+            "gammaMean": 113.963,
+            "phiStd": 30.219,
+            "psiStd": 28.245,
+            "omegaStd": 7.108,
+            "alphaStd": 5.253,
+            "betaStd": 4.348,
+            "gammaStd": 1.54
+        }
+    ],
+    "NAG-1,2-MAN": [
+        {
+            "phiMean": -83.16,
+            "psiMean": 156.76,
+            "omegaMean": 179.206,
+            "alphaMean": 112.999,
+            "betaMean": 110.775,
+            "gammaMean": 114.244,
+            "phiStd": 19.077,
+            "psiStd": 44.258,
+            "omegaStd": 7.931,
+            "alphaStd": 4.643,
+            "betaStd": 2.718,
+            "gammaStd": 2.309
+        },
+        {
+            "phiMean": 44.462,
+            "psiMean": 137.69,
+            "omegaMean": 179.559,
+            "alphaMean": 115.473,
+            "betaMean": 111.794,
+            "gammaMean": 114.886,
+            "phiStd": 33.911,
+            "psiStd": 29.346,
+            "omegaStd": 6.177,
+            "alphaStd": 4.062,
+            "betaStd": 3.361,
+            "gammaStd": 2.858
+        }
+    ],
+    "NAG-1,4-NAG": [
+        {
+            "phiMean": 30.089,
+            "psiMean": -124.86,
+            "omegaMean": 175.963,
+            "alphaMean": 117.289,
+            "betaMean": 110.997,
+            "gammaMean": 113.811,
+            "phiStd": 51.985,
+            "psiStd": 27.34,
+            "omegaStd": 7.299,
+            "alphaStd": 7.737,
+            "betaStd": 4.438,
+            "gammaStd": 1.418
+        },
+        {
+            "phiMean": -80.049,
+            "psiMean": -127.513,
+            "omegaMean": 179.044,
+            "alphaMean": 112.665,
+            "betaMean": 111.191,
+            "gammaMean": 113.81,
+            "phiStd": 17.934,
+            "psiStd": 24.467,
+            "omegaStd": 4.33,
+            "alphaStd": 4.676,
+            "betaStd": 2.708,
+            "gammaStd": 1.316
+        }
+    ]
+}
